@@ -6,7 +6,7 @@
 /*   By: dcerrito <dcerrito@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 21:46:17 by dcerrito          #+#    #+#             */
-/*   Updated: 2022/04/12 00:42:54 by dcerrito         ###   ########.fr       */
+/*   Updated: 2022/04/12 03:28:02 by dcerrito         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,14 @@ static int	parses(size_t n, size_t base_size, char **base, int count)
 	);
 }
 
-int	ft_putnbr_base(long n, char *base)
+int	ft_putnbr_base(long n, char *base, int omit_print_neg)
 {
-	if (n < 0 && write(1, "-", 1))
+	int	is_negative;
+
+	is_negative = 0;
+	if (!omit_print_neg && n < 0)
+		is_negative = 1;
+	if (is_negative && write(1, "-", 1))
 		n *= -1;
-	return (parses(n, ft_strlen(base), &base, 0));
+	return (parses(n, ft_strlen(base), &base, is_negative));
 }
