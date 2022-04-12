@@ -4,3 +4,4 @@
 main.c
 printfTester
 .default
+ft_printf_tester
