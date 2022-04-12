@@ -6,7 +6,7 @@
 #    By: dcerrito <dcerrito@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/28 08:06:16 by dcerrito          #+#    #+#              #
-#    Updated: 2022/04/11 21:49:49 by dcerrito         ###   ########.fr        #
+#    Updated: 2022/04/12 16:34:56 by dcerrito         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ clean:
 	@make clean -C $(LIBFT)
 	$(FRM) $(CORE_OBJS)
 fclean: clean
-	make fclean -C $(LIBFT)
+	@make fclean -C $(LIBFT)
 	$(FRM) $(NAME)
 re: fclean all
 .PHONY: re clean fclean all
