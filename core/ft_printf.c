@@ -6,7 +6,7 @@
 /*   By: dcerrito <dcerrito@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 16:46:54 by dcerrito          #+#    #+#             */
-/*   Updated: 2022/04/12 00:49:49 by dcerrito         ###   ########.fr       */
+/*   Updated: 2022/04/12 03:33:28 by dcerrito         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,32 +28,37 @@ static int	matches_mask(const char **__format, char mask)
 
 static int	puts_nbr(const char **format, va_list args, size_t *printed)
 {
-	int	result;
+	int		result;
 
 	result = 0;
 	if (matches_mask(format, 'p'))
-	{
-		ft_putstr_fd("0x", 1);
-		result = 2 + ft_putnbr_base(va_arg(args, size_t), HEX_LOW);
-	}
+		result = (ft_putstr_fd("0x", 1), 2)
+			+ ft_putnbr_base(va_arg(args, size_t), HEX_LOW, 1);
 	else if (matches_mask(format, 'd'))
-		result = ft_putnbr_base(va_arg(args, long), DEC_DEF);
+		result = ft_putnbr_base(va_arg(args, int), DEC_DEF, 0);
 	else if (matches_mask(format, 'i'))
-		result = ft_putnbr_base(va_arg(args, int), DEC_DEF);
+		result = ft_putnbr_base(va_arg(args, int), DEC_DEF, 0);
 	else if (matches_mask(format, 'u'))
-		result = ft_putnbr_base(va_arg(args, size_t), DEC_DEF);
+		result = ft_putnbr_base(va_arg(args, unsigned int), DEC_DEF, 0);
 	else if (matches_mask(format, 'x'))
-		result = ft_putnbr_base(va_arg(args, size_t), HEX_LOW);
+		result = ft_putnbr_base(va_arg(args, unsigned int), HEX_LOW, 0);
 	else if (matches_mask(format, 'X'))
-		result = ft_putnbr_base(va_arg(args, size_t), HEX_UPP);
+		result = ft_putnbr_base(va_arg(args, unsigned int), HEX_UPP, 0);
 	return (*printed += result, result);
+}
+
+size_t	puts_str(char *str)
+{
+	if (!str)
+		return (ft_putstr_fd("(null)", 1), 6);
+	ft_putstr_fd(str, 1);
+	return (ft_strlen(str));
 }
 
 int	ft_printf(const char *format, ...)
 {
 	va_list	args;
 	size_t	printed;
-	char	*str;
 
 	va_start(args, format);
 	printed = 0;
@@ -62,10 +67,7 @@ int	ft_printf(const char *format, ...)
 		if (matches_mask(&format, 'c') && ++printed)
 			ft_putchar_fd(va_arg(args, int), 1);
 		else if (matches_mask(&format, 's'))
-		{
-			printed += ft_strlen((str = va_arg(args, char *)));
-			ft_putstr_fd(str, 1);
-		}
+			printed += puts_str(va_arg(args, char *));
 		else if (puts_nbr(&format, args, &printed))
 			;
 		else if (matches_mask(&format, '%') && ++printed)
