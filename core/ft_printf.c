@@ -6,7 +6,7 @@
 /*   By: dcerrito <dcerrito@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 16:46:54 by dcerrito          #+#    #+#             */
-/*   Updated: 2022/04/12 03:33:28 by dcerrito         ###   ########.fr       */
+/*   Updated: 2022/04/12 04:05:15 by dcerrito         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,16 @@
 #define HEX_UPP "0123456789ABCDEF"
 #define DEC_DEF "0123456789"
 
-static int	matches_mask(const char **__format, char mask)
+static int	matches_mask(char **format, char mask)
 {
-	char	*format;
-
-	format = (char *)*__format;
-	if (*format == '%' && format[1] == mask)
-		return (++*__format, 1);
+	if ((*format)[0] == '%' && (*format)[1] == mask)
+		return (++*format, 1);
 	return (0);
 }
 
-static int	puts_nbr(const char **format, va_list args, size_t *printed)
+static int	puts_nbr(char **format, va_list args, size_t *printed)
 {
-	int		result;
+	int	result;
 
 	result = 0;
 	if (matches_mask(format, 'p'))
@@ -55,14 +52,16 @@ size_t	puts_str(char *str)
 	return (ft_strlen(str));
 }
 
-int	ft_printf(const char *format, ...)
+int	ft_printf(const char *__format, ...)
 {
 	va_list	args;
 	size_t	printed;
+	char	*format;
 
-	va_start(args, format);
+	format = (char *)__format;
+	va_start(args, __format);
 	printed = 0;
-	while (*format)
+	while (format && *format)
 	{
 		if (matches_mask(&format, 'c') && ++printed)
 			ft_putchar_fd(va_arg(args, int), 1);
